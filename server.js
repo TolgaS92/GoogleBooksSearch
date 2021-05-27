@@ -16,12 +16,13 @@ if (process.env.NODE_ENV === "production") {
 app.use(routes);
 
 // Connect to the Mongo DB
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/googlebooks");
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/googlebooks",
+{ useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
 
 /* Activate at the end of coding! */
-/* app.get("*", (req, res) => {
+app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
-}); */
+});
 
 // Start the API server
 app.listen(PORT, function() {

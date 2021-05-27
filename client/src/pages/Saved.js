@@ -1,24 +1,55 @@
 import React, { Component } from "react";
 import API from "../utils/API";
-import Results from "../components/Results";
+import { Col, Row, Container } from '../components/Grid';
+import { List, ListItem } from '../components/List';
+import Jumbotron from '../components/Jumbotron';
 
 class Saved extends Component {
     state = {
         savedBooks: [],
-    }
+    };
 
     componentDidMount() {
-        API.saveBook()
-            .then(savedBooks => this.setState({ savedBooks: savedBooks }))
-            .catch(err => console.error(err));
+        this.savebook();
     }
+
+    savebook =() => {
+        API.getBooks()
+        .then(res => this.setState({ books:res.data }))
+        .catch(err => console.log(err));
+    };
+
+    handleDeleteButton = id => {
+        API.deleteBook(id)
+        .then(res => this.savebook())
+        .catch(err => console.log(err));
+    };
 
     render() {
         return (
-            <div className="container">
-                <h2>Saved books</h2>
-                <Results books={this.state.savedBooks} />
-            </div>
+            <Container>
+                <Jumbotron />
+                <Row>
+                    <Col size="sm-12">
+                        {this.state.savedBooks.length ? (
+                            <List>
+                                {this.state.books.map(book => (
+                                    <ListItem key={book._id}>
+                                        <a href={book.link} target="blank">{book.title}</a>
+                                        <img src={book.image} alt={book.title} />
+                                        <p>Written by: {book.authors}</p>
+                                        <p>Published on: {book.publishedDate}</p>
+                                        <p>{book.description}</p>
+                                        <button className="list-button" onClick={() => this.handleDeleteButton(book._id)}>Delete</button> 
+                                    </ListItem>
+                                ))}
+                            </List>
+                        ) :(
+                            <p>Error!</p>
+                        )}
+                    </Col>
+                </Row>
+            </Container>
         )
     }
 }

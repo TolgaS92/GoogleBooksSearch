@@ -15,6 +15,7 @@ module.exports = {
             .catch(err => res.status(422).json(err));
     },
     create: function(req, res) {
+        req.body.author = req.body.author.join(", ");
         db.Book
           .create(req.body)
           .then(dbData => res.json(dbData))
