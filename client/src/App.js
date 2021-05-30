@@ -11,9 +11,15 @@ function App() {
       <div>
         <Navbar />
         <Wrapper>
-          <Route exact path="/" component={Search} />
-          <Route exact path="/search" component={Search} />
-          <Route exact path="/saved" component={Saved} />
+          {/* <Route exact path="/" component={Search} /> */}
+          {/* <Route exact path="/search" component={Search} /> */}
+          <Route exact path={["/", "/search"]}>
+            <Search />
+          </Route>
+          <Route exact path="/books/:id">
+            <Saved />
+          </Route>
+          {/* <Route exact path="/saved" component={Saved} /> */}
         </Wrapper>
       </div>
     </Router>
