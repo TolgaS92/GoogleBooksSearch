@@ -7,11 +7,17 @@ class Results extends Component {
         savedBooks: [],
     }
 
-    componentDidMount() {
-        API.saveBook()
-            .then(savedBooks => this.setState({ saveBook: savedBooks }))
-            .catch(err => console.error(err));
-    }
+    /* createBook = (bookData) => {
+        return {
+          _id: bookData.id,
+          title: bookData.volumeInfo.title,
+          authors: bookData.volumeInfo.authors,
+          description: bookData.volumeInfo.description,
+          image: bookData.volumeInfo.imageLinks.thumbnail,
+          link: bookData.volumeInfo.previewLink,
+        };
+      }; */
+
 
     handleSave = book => {  
 
@@ -29,22 +35,22 @@ class Results extends Component {
     render() {
         return (
             <div>
-                {!this.props.books.length ? (
+                {!this.props.googleBooks.length ? (
                     <h1 className="text-center">No Results to Display</h1>
                 ) : (
                         <div>
-                            {this.props.books.map(result => (
-                                <div className="card mb-3" key={result._id}>
+                            {this.props.googleBooks.map(result => (
+                                <div className="card mb-3" key={result.id}>
                                     <div className="row">
                                         <div className="col-md-2">
-                                            <img alt={result.title} className="img-fluid" src={result.image} />
+                                            <img alt={result.volumeInfo.title} className="img-fluid" src={result.volumeInfo.imageLinks.thumbnail} />
                                         </div>
                                         <div className="col-md-10">
                                             <div className="card-body">
-                                                <h5 className="card-title">{result.title} by {result.authors}</h5>
-                                                <p className="card-text">{result.description}</p>
+                                                <h5 className="card-title">{result.volumeInfo.title} by {result.volumeInfo.authors}</h5>
+                                                <p className="card-text">{result.volumeInfo.description}</p>
                                                 <div>
-                                                    <a href={result.link} className="btn btn-light btn-outline-dark mt-3" target="blank">Details</a>
+                                                    <a href={result.volumeInfo.previewLink} className="btn btn-light btn-outline-dark mt-3" target="blank">Details</a>
                                                     <button onClick={() => this.handleSave(result)} className="btn btn-light btn-outline-dark mt-3 ml-3" >
                                                         {this.state.savedBooks.map(book => book._id).includes(result._id) ? "Unsave" : "Save"}
                                                     </button>
