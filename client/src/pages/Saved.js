@@ -8,6 +8,13 @@ import { List, ListItem } from '../components/List';
 function Saved(props) {
   const [book, setBook] = useState({})
 
+  function loadBooks() {
+    API.getBooks()
+      .then(res => 
+        setBook(res.data)
+      )
+      .catch(err => console.log(err));
+  };
   // When this component mounts, grab the book with the _id of props.match.params.id
   // e.g. localhost:3000/books/599dcb67f0f16317844583fc
   /* const {id} = useParams() */
@@ -17,7 +24,12 @@ function Saved(props) {
       .then(res => setBook(res.data))
       .catch(err => console.log(err));
   }, [])
-
+  // Deletes a book from the database with a given id, then reloads books from the db
+  function deleteBook(id) {
+    API.deleteBook(id)
+    .then(res => loadBooks())
+    .catch(err => console.log(err));  
+  }
   return (
       <Container fluid>
         <Col size="sm-12">
@@ -33,11 +45,12 @@ function Saved(props) {
                     <p>Written by: {book.authors}</p>
                     <p>Published on: {book.date}</p>
                     <p>{book.description}</p>
+                    <button onClick={() =>   deleteBook(book._id)}>Delete</button>
                   </ListItem>
                 ))}
               </List>
             ) : (
-              <h3>No Results to Display</h3>
+              <h3 className="text-center">No Results to Display</h3>
             )}
           </Col>
         <Row>
