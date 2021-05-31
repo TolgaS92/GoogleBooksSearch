@@ -1,57 +1,53 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Col, Row, Container } from "../components/Grid";
+import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
-import { Col, Row, Container } from '../components/Grid';
 import { List, ListItem } from '../components/List';
-import Jumbotron from '../components/Jumbotron';
 
-class Saved extends Component {
-    state = {
-        savedBooks: [],
-    };
+function Saved(props) {
+  const [book, setBook] = useState({})
 
-    componentDidMount() {
-        this.savebook();
-    }
+  // When this component mounts, grab the book with the _id of props.match.params.id
+  // e.g. localhost:3000/books/599dcb67f0f16317844583fc
+  /* const {id} = useParams() */
+  console.log(book);
+  useEffect(() => {
+    API.getBooks()
+      .then(res => setBook(res.data))
+      .catch(err => console.log(err));
+  }, [])
 
-    savebook =() => {
-        API.getBooks()
-        .then(res => this.setState({ books:res.data }))
-        .catch(err => console.log(err));
-    };
+  return (
+      <Container fluid>
+        <Col size="sm-12">
+            <Jumbotron>
+              <h1>Books On My List</h1>
+            </Jumbotron>
+            {book.length ? (
+              <List>
+                {book.map(book => (
+                  <ListItem key={book._id}>
+                    <a href={book.link} target="blank">{book.title}</a>
+                    <img src={book?.imageLinks?.smallThumbnail} alt={book.title} />
+                    <p>Written by: {book.authors}</p>
+                    <p>Published on: {book.publishedDate}</p>
+                    <p>{book.description}</p>
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              <h3>No Results to Display</h3>
+            )}
+          </Col>
+        <Row>
+          <Col size="md-2">
+            <Link to="/">← Back to Search</Link>
+          </Col>
+        </Row>
+      </Container>
+    );
+  }
 
-    handleDeleteButton = id => {
-        API.deleteBook(id)
-        .then(res => this.savebook())
-        .catch(err => console.log(err));
-    };
-
-    render() {
-        return (
-            <Container>
-                <Jumbotron />
-                <Row>
-                    <Col size="sm-12">
-                        {this.state.savedBooks.length ? (
-                            <List>
-                                {this.state.books.map(book => (
-                                    <ListItem key={book._id}>
-                                        <a href={book.link} target="blank">{book.title}</a>
-                                        <img src={book.image} alt={book.title} />
-                                        <p>Written by: {book.authors}</p>
-                                        <p>Published on: {book.publishedDate}</p>
-                                        <p>{book.description}</p>
-                                        <button className="list-button" onClick={() => this.handleDeleteButton(book._id)}>Delete</button> 
-                                    </ListItem>
-                                ))}
-                            </List>
-                        ) :(
-                            <p>Error!</p>
-                        )}
-                    </Col>
-                </Row>
-            </Container>
-        )
-    }
-}
 
 export default Saved;

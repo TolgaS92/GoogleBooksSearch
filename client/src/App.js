@@ -16,7 +16,7 @@ function App() {
           <Route exact path={["/", "/search"]}>
             <Search />
           </Route>
-          <Route exact path="/books/:id">
+          <Route exact path={["/saved","/books/:id"]}>
             <Saved />
           </Route>
           {/* <Route exact path="/saved" component={Saved} /> */}

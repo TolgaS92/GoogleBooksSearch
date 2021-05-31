@@ -15,14 +15,15 @@ function Search() {
     useEffect(() => {
         loadBooks()
       }, [])
-    
-    function getGoogleBooks(event) {
+    /*  */
+    /* function searchGoogleBooks(event) {
         event.preventDefault();
-        API.getGoogleBooks("Harry Potter").then(googleBooks => {
-            setGoogleBooks(googleBooks.data.items);
-            console.log(googleBooks.data.items);
+        const query = event.target.value.trim()
+        API.getGoogleBooks(query).then(res => {
+            setGoogleBooks(res.data.items);
+            console.log(res.data.items);
         })
-    };
+    }; */
     function loadBooks() {
         API.getBooks()
         .then(res => 
@@ -34,16 +35,24 @@ function Search() {
     function deleteBook(id) {
         API.deleteBook(id)
         .then(res => loadBooks())
-        .catch(err => console.log(err));
+        .catch(err => console.log(err));  
   }
   // Handles updating component state when the user types into the input field
   function handleInputChange(event) {
-    const { name, value } = event.target;
-    setSaveObject({...saveObject, [name]: value})
+    event.preventDefault();
+    const query = event.target.value.trim()
+    console.log(`>> q`, query)
+    API.getGoogleBooks(query).then(res => {
+      setGoogleBooks(res.data.items) /*  */
+    }).catch(err => console.log(err));
+    /* const { name, value } = event.target;
+    setSaveObject({...saveObject, [name]: value}) */
   };
 
-  function handleFormSubmit() {
-    if (saveObject.title && saveObject.authors) {
+  function handleSaveButton(event) {
+    const { name, value } = event.target;
+    setSaveObject({...saveObject, [name]: value})
+    /* if (googleBooks.data.items[0].volumeInfo.title && googleBooks.data.items[0].volumeInfo.authors) { */
       API.saveBook({
         title: saveObject.title,
         authors: saveObject.authors,
@@ -54,7 +63,7 @@ function Search() {
         .then(res => loadBooks())
         .catch(err => console.log(err));
     }
-  };
+  /* }; */
   return (
     <Container>
         <Jumbotron>
@@ -66,14 +75,14 @@ function Search() {
                     <form>
                         <p>Search for a Title:</p>
                         <Input
-                        defaultValue="Harry Potter"
+                        /* onChange={(event) => handleInputChange(event)} */
                         onChange={handleInputChange}
                         name="title"
                         placeholder="Search for Book Title"
                         />
-                        <FormBtn onClick={getGoogleBooks}>
+                        {/* <FormBtn onClick={searchGoogleBooks}>
                             Search
-                        </FormBtn>
+                        </FormBtn> */}
                     </form>
                 </Wrapper>
             </Col>
@@ -85,11 +94,11 @@ function Search() {
                         {googleBooks.map(book => (
                             <ListItem key={book.id}>
                                 <a href={book.volumeInfo.link} target="blank">{book.volumeInfo.title}</a>
-                                <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} />
+                                <img src={book?.volumeInfo?.imageLinks?.smallThumbnail} alt={book.volumeInfo.title} />
                                 <p>Written by: {book.volumeInfo.authors}</p>
                                 <p>Published on: {book.volumeInfo.publishedDate}</p>
                                 <p>{book.volumeInfo.description}</p>
-                                <button className="list-button" onClick={handleFormSubmit}>Save</button>
+                                <button className="list-button" onClick={handleSaveButton}>Save</button>
                             </ListItem>
                         ))}
                     </List>
@@ -121,17 +130,11 @@ function Search() {
               />
               <Input
                 onChange={handleInputChange}
-                name="image"
-                placeholder="Image"
-              />
-              <Input
-                onChange={handleInputChange}
                 name="link"
                 placeholder="Link"
               />
               <FormBtn
-                disabled={!(saveObject.authors && saveObject.title)}
-                onClick={handleFormSubmit}
+                /* onClick={handleSubmitButton} */
               >
                 Submit Book
               </FormBtn>
