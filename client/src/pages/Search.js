@@ -15,15 +15,7 @@ function Search() {
     useEffect(() => {
         loadBooks()
       }, [])
-    /*  */
-    /* function searchGoogleBooks(event) {
-        event.preventDefault();
-        const query = event.target.value.trim()
-        API.getGoogleBooks(query).then(res => {
-            setGoogleBooks(res.data.items);
-            console.log(res.data.items);
-        })
-    }; */
+  
     function loadBooks() {
         API.getBooks()
         .then(res => 
@@ -80,9 +72,6 @@ function Search() {
                         name="title"
                         placeholder="Search for Book Title"
                         />
-                        {/* <FormBtn onClick={searchGoogleBooks}>
-                            Search
-                        </FormBtn> */}
                     </form>
                 </Wrapper>
             </Col>
