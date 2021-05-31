@@ -35,27 +35,71 @@ function Search() {
     const query = event.target.value.trim()
     console.log(`>> q`, query)
     API.getGoogleBooks(query).then(res => {
-      setGoogleBooks(res.data.items) /*  */
+      setGoogleBooks(res.data.items)
+      console.log(res.data.items);
     }).catch(err => console.log(err));
     /* const { name, value } = event.target;
     setSaveObject({...saveObject, [name]: value}) */
   };
 
-  function handleSaveButton(event) {
-    const { name, value } = event.target;
-    setSaveObject({...saveObject, [name]: value})
+  function handleSaveButton(id, title, authors, description, image, link) {
+    const savedBook = googleBooks.filter(book => book.id === id)
+    const savedTitle = googleBooks.filter(book => book.title === title)
+    const savedAuthors = googleBooks.filter(book => book.authors === authors)
+    const savedDescription = googleBooks.filter(book => book.description === description)
+    const savedImage = googleBooks.filter(book => book.image === image)
+    const savedLink = googleBooks.filter(book => book.link === link)
+
+    const bookDetails = {
+      googleId: id,
+      title: savedTitle[0].volumeInfo.title,
+      authors: savedAuthors[0].volumeInfo.authors[0],
+      description: savedDescription[0].volumeInfo.description,
+      image: savedImage[0].volumeInfo.imageLinks.thumbnail,
+      link: savedLink[0].volumeInfo.previewLink,
+      date: savedBook[0].volumeInfo.publishedDate
+    }
+    API.saveBook(bookDetails)
+    .then(res => {
+      setSaveObject(saveObject);
+    }).catch(err => console.log(err));
+    /* const { name, value } = event.target;
+    setSaveObject({...saveObject, [name]: value}) */
     /* if (googleBooks.data.items[0].volumeInfo.title && googleBooks.data.items[0].volumeInfo.authors) { */
+      /* API.saveBook({
+        googleId: id,
+        title: savedBook[0].title,
+        author: savedBook[0].authors,
+        description: savedBook[0].description,
+        image: savedBook[0].image,
+        link: savedBook[0].link,
+        date: savedBook[0].publishedDate
+      })
+        .then(res => loadBooks())
+        .catch(err => console.log(err)); */
+    }
+  /* }; */
+
+
+  /* Bottom Form saves for the  mongod */
+  function handleFormSubmit(event) {
+    event.preventDefault();
+    if (saveObject.title && saveObject.authors) {
       API.saveBook({
         title: saveObject.title,
         authors: saveObject.authors,
-        description: saveObject.description,
-        image: saveObject.image,
-        link: saveObject.link
+        description: saveObject.description
       })
         .then(res => loadBooks())
         .catch(err => console.log(err));
     }
-  /* }; */
+  };
+  function handleInputFormChange(event) {
+    const { name, value } = event.target;
+    setSaveObject({...saveObject, [name]: value})
+  };
+
+
   return (
     <Container>
         <Jumbotron>
@@ -67,7 +111,6 @@ function Search() {
                     <form>
                         <p>Search for a Title:</p>
                         <Input
-                        /* onChange={(event) => handleInputChange(event)} */
                         onChange={handleInputChange}
                         name="title"
                         placeholder="Search for Book Title"
@@ -82,12 +125,12 @@ function Search() {
                     <List>                            
                         {googleBooks.map(book => (
                             <ListItem key={book.id}>
-                                <a href={book.volumeInfo.link} target="blank">{book.volumeInfo.title}</a>
+                                <a href={book.volumeInfo.previewLink} target="blank">{book.volumeInfo.title}</a>
                                 <img src={book?.volumeInfo?.imageLinks?.smallThumbnail} alt={book.volumeInfo.title} />
                                 <p>Written by: {book.volumeInfo.authors}</p>
                                 <p>Published on: {book.volumeInfo.publishedDate}</p>
                                 <p>{book.volumeInfo.description}</p>
-                                <button className="list-button" onClick={handleSaveButton}>Save</button>
+                                {/* <button className="list-button" onClick={handleSaveButton(book.id)}>Save</button> */}
                             </ListItem>
                         ))}
                     </List>
@@ -103,27 +146,27 @@ function Search() {
             </Jumbotron>
             <form>
               <Input
-                onChange={handleInputChange}
+                onChange={handleInputFormChange}
                 name="title"
                 placeholder="Title (required)"
               />
               <Input
-                onChange={handleInputChange}
+                onChange={handleInputFormChange}
                 name="authors"
                 placeholder="Author (required)"
               />
               <Input
-                onChange={handleInputChange}
+                onChange={handleInputFormChange}
                 name="description"
                 placeholder="Description"
               />
               <Input
-                onChange={handleInputChange}
+                onChange={handleInputFormChange}
                 name="link"
                 placeholder="Link"
               />
               <FormBtn
-                /* onClick={handleSubmitButton} */
+                onClick={handleFormSubmit}
               >
                 Submit Book
               </FormBtn>

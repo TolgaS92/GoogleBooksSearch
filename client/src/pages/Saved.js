@@ -29,9 +29,9 @@ function Saved(props) {
                 {book.map(book => (
                   <ListItem key={book._id}>
                     <a href={book.link} target="blank">{book.title}</a>
-                    <img src={book?.imageLinks?.smallThumbnail} alt={book.title} />
+                    <img src={book.image} alt={book.title} />
                     <p>Written by: {book.authors}</p>
-                    <p>Published on: {book.publishedDate}</p>
+                    <p>Published on: {book.date}</p>
                     <p>{book.description}</p>
                   </ListItem>
                 ))}
