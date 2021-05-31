@@ -38,7 +38,8 @@
 
 - User only needs to go to the deployed link, and look up for a book.
 
-- ![Home Page](...)
+- ![Search Page](assets/images/Searchpage.JPG)
+- ![Saved Page](assets/images/Savedpage.JPG)
 
 ## License
 
