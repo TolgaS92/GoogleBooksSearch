@@ -8,10 +8,19 @@ import Results from '../components/Results';
 function Search() {
     const [googleBooks, setGoogleBooks] = useState([])
 
+    function makeBook (bookData)  {
+        return {
+            _id: bookData.id,
+            title: bookData.volumeInfo.title,
+            authors: bookData.volumeInfo.authors,
+            description: bookData.volumeInfo.description,
+            image: bookData.volumeInfo.imageLinks.thumbnail,
+            link: bookData.volumeInfo.previewLink
+        }
+    }
     useEffect(() => {
       API.getGoogleBooks("Harry potter").then(res => {
-        setGoogleBooks(res.data.items)
-        console.log(res.data.items);
+        setGoogleBooks((res.data.items).map(bookData => makeBook(bookData)))
       }).catch(err => console.log(err));
       }, [])
   
@@ -19,10 +28,8 @@ function Search() {
   function handleInputChange(event) {
     event.preventDefault();
     const query = event.target.value.trim()
-    console.log(`>> q`, query)
     API.getGoogleBooks(query).then(res => {
-      setGoogleBooks(res.data.items)
-      console.log(res.data.items);
+      setGoogleBooks((res.data.items).map(bookData => makeBook(bookData)))
     }).catch(err => console.log(err));
   };
   

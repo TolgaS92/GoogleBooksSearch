@@ -7,17 +7,6 @@ class Results extends Component {
         savedBooks: [],
     }
 
-    /* createBook = (bookData) => {
-        return {
-          _id: bookData.id,
-          title: bookData.volumeInfo.title,
-          authors: bookData.volumeInfo.authors,
-          description: bookData.volumeInfo.description,
-          image: bookData.volumeInfo.imageLinks.thumbnail,
-          link: bookData.volumeInfo.previewLink,
-        };
-      }; */
-
 
     handleSave = book => {  
 
@@ -40,19 +29,19 @@ class Results extends Component {
                 ) : (
                         <div>
                             {this.props.googleBooks.map(result => (
-                                <div className="card mb-3" key={result.id}>
+                                <div className="card mb-3" key={result._id}>
                                     <div className="row">
                                         <div className="col-md-2">
-                                            <img alt={result.volumeInfo.title} className="img-fluid" src={result.volumeInfo.imageLinks.thumbnail} />
+                                            <img alt={result.title} className="img-fluid" src={result.image} />
                                         </div>
                                         <div className="col-md-10">
                                             <div className="card-body">
-                                                <h5 className="card-title">{result.volumeInfo.title} by {result.volumeInfo.authors}</h5>
-                                                <p className="card-text">{result.volumeInfo.description}</p>
+                                                <h5 className="card-title">{result.title} by {result.authors}</h5>
+                                                <p className="card-text">{result.description}</p>
                                                 <div>
-                                                    <a href={result.volumeInfo.previewLink} className="btn btn-light btn-outline-dark mt-3" target="blank">Details</a>
+                                                    <a href={result.link} className="btn btn-light btn-outline-dark mt-3" target="blank">Details</a>
                                                     <button onClick={() => this.handleSave(result)} className="btn btn-light btn-outline-dark mt-3 ml-3" >
-                                                        {this.state.savedBooks.map(book => book._id).includes(result._id) ? "Unsave" : "Save"}
+                                                    {this.state.savedBooks.map(book => book._id).includes(result._id) ? "Unsave" : "Save"}
                                                     </button>
                                                 </div>
                                             </div>
