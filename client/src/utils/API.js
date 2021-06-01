@@ -20,7 +20,6 @@ export default {
   },
   // Saves a book to the database
   saveBook: function (bookData) {
-    console.log("I am in savebook", bookData);
     return axios.post("/api/books", bookData);
   },
   savedBooks: function () {

@@ -16,10 +16,11 @@ class SavedResults extends Component {
   }
 
   // Function to handle deletion of books
-  handleBookDelete = (book) => {
-    API.deleteBook(book._id)
-      .then(deletedBook => this.setState({ savedBooks: this.state.savedBooks.filter(book => book._id !== deletedBook._id) }))
-      .catch(err => console.error(err));
+  handleDeleteBook = id => {
+    alert("Deleted from the database just need to refresh")
+    API.deleteBook(id)
+      .then(res => this.componentDidMount())
+      .catch(err => console.log(err));
   };
 
   render() {
@@ -35,7 +36,7 @@ class SavedResults extends Component {
                             <p>Written by: {book.authors}</p>
                             <p>Published on: {book.date}</p>
                             <p>{book.description}</p>
-                            <button onClick={() =>   this.handleBookDelete(book._id)}>Delete</button>
+                            <button onClick={() =>   this.handleDeleteBook(book._id)}>Delete</button>
                             </ListItem>
                         ))}
                         </List>

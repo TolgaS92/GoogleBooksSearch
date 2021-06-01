@@ -15,6 +15,7 @@ class Results extends Component {
                 .then(deletedBook => this.setState({ savedBooks: this.state.savedBooks.filter(book => book._id !== deletedBook._id) }))
                 .catch(err => console.error(err));
         } else {
+            alert("Saved!")
             API.saveBook(book)
                 .then(savedBook => this.setState({ savedBooks: this.state.savedBooks.concat([savedBook]) }))
                 .catch(err => console.error(err));
